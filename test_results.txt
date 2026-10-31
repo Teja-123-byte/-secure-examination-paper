@@ -1,0 +1,70 @@
+========================================================================
+SETUP: generating RSA-4096 key pairs (sender, recipient, attacker)
+========================================================================
+Simulation folders: workshop\run_5f395f3a
+Public keys exchanged via trusted channel (copied into trusted_keys/).
+Sender fingerprint    : 3e5e8b5d32acbee49957ea859ecf1435...
+Recipient fingerprint : e9d7ecb824ed83c7c2d25707e7d0b27f...
+Attacker fingerprint  : 2f4e8c567c7d2bfad413d20ba0a10f79...
+
+========================================================================
+TEST 1: Authorised recipient recovers the original file
+========================================================================
+  [PASS] Decrypted file identical to original (529 bytes, SHA-256 match = True)
+
+========================================================================
+TEST 2: Attacker modifies ciphertext / metadata / signature
+========================================================================
+  [PASS] Modified ciphertext
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Modified GCM tag
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Modified nonce
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Modified encrypted session key
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Modified metadata (filename changed)
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Modified metadata (recipient_id changed)
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Modified signature
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] Signed package missing required metadata
+         -> REJECTED: malformed package (missing required metadata)
+  [PASS] Package containing a duplicate JSON field
+         -> REJECTED: malformed package (duplicate JSON field: tag)
+  [PASS] Package replaced by attacker's own signed forgery
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+  [PASS] No plaintext was written for any rejected package
+
+========================================================================
+TEST 3: Decryption attempted with an incorrect private key
+========================================================================
+  [PASS] Attacker's private key used to decrypt valid package
+         -> REJECTED: package is not addressed to this recipient's key
+  [PASS] Wrong passphrase cannot unlock stored private key
+         -> Cannot load private key workshop\run_5f395f3a\recipient\keys\coordinator_private.pem: Incorrect password, could not decrypt key
+  [PASS] Valid signature, but session key wrapped for a different RSA key (OAEP layer)
+         -> REJECTED: cannot recover session key (wrong recipient private key or corrupted key blob)
+  [PASS] Valid signature, but ciphertext altered (AES-GCM tag layer)
+         -> REJECTED: AES-GCM authentication tag mismatch (ciphertext/metadata altered)
+
+========================================================================
+TEST 4: Signature verification with an incorrect sender public key
+========================================================================
+  [PASS] Verification using attacker's public key as 'trusted sender key'
+         -> REJECTED: signature verification failed (package modified, or not signed by the trusted sender)
+
+========================================================================
+TEST 5: Same file encrypted twice -> different packages
+========================================================================
+  [PASS] nonce                  differs between runs
+  [PASS] encrypted_session_key  differs between runs
+  [PASS] ciphertext             differs between runs
+  [PASS] tag                    differs between runs
+  [PASS] signature              differs between runs
+  [PASS] Both packages still decrypt to the original file
+
+========================================================================
+SUMMARY: 23/23 checks passed
+========================================================================

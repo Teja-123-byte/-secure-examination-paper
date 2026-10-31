@@ -1,0 +1,8 @@
+CONFIDENTIAL - END-SEMESTER EXAMINATION
+Course: Cryptography and Network Security      Max Marks: 50      Time: 2 hours
+
+Q1. (10 marks) Explain how AES-GCM provides both confidentiality and integrity.
+Q2. (10 marks) Compare RSA-OAEP and textbook RSA. Why is padding essential?
+Q3. (10 marks) Describe RSA-PSS and explain why a fresh salt is used per signature.
+Q4. (10 marks) Why must an AES-GCM nonce never repeat under the same key?
+Q5. (10 marks) Design a hybrid encryption scheme for sending files over an untrusted channel.

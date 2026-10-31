@@ -24,7 +24,6 @@ authenticated and exchanged through a trusted channel.
 | `secure_exchange.py` | Key management, package encryption/signing, and verification/decryption |
 | `app.py` | Command-line interface for key generation, encryption, and decryption |
 | `simulate.py` | Sender/recipient folder simulation and security tests |
-| `make_diagram.py` | Regenerates `sequence_diagram.png` using Matplotlib |
 | `sample_input/exam_paper.txt` | Sample plaintext input |
 | `sample_output/exam_paper.pkg.json` | Example encrypted and signed package |
 | `test_results.txt` | Latest saved simulation results |
@@ -77,33 +76,7 @@ private-key file and folder access with account permissions.
 
 ## Sequence diagram
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant S as Sender (Faculty)
-    participant C as Untrusted Channel / Attacker
-    participant R as Recipient (Coordinator)
-
-    Note over S,R: Setup: generate separate RSA-4096 key pairs; exchange public keys through a trusted channel
-    S->>S: Read paper; generate fresh AES-256 key and 96-bit nonce
-    S->>S: AES-256-GCM encrypt paper with metadata as AAD
-    S->>S: RSA-OAEP (SHA-256) encrypt session key with recipient public key
-    S->>S: RSA-PSS (SHA-256) sign metadata, wrapped key, nonce, ciphertext, and tag
-    S->>C: Send encrypted package and signature
-    C-->>R: Deliver package (may be read, modified, or replaced)
-    R->>R: Verify RSA-PSS signature with trusted sender public key
-    R->>R: Check recipient fingerprint
-    R->>R: RSA-OAEP (SHA-256) decrypt session key with recipient private key
-    R->>R: AES-256-GCM decrypt and verify tag with metadata as AAD
-    R-->>R: Release plaintext only after every check succeeds
-```
-
 The image version is available at [sequence_diagram.png](sequence_diagram.png).
-To regenerate it, run:
-
-```powershell
-python make_diagram.py
-```
 
 ## Security properties and limitations
 
